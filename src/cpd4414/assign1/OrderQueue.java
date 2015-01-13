@@ -6,10 +6,19 @@
 
 package cpd4414.assign1;
 
+import java.util.ArrayDeque;
+import java.util.Date;
+import java.util.Queue;
+
 /**
  *
  * @author c0587637
  */
 public class OrderQueue {
+    Queue<Order> orderQueue = new ArrayDeque<>();
     
+    public void add(Order order) {
+        orderQueue.add(order);
+        order.setTimeReceived(new Date());
+    }
 }
