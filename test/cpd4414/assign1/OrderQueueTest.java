@@ -50,16 +50,68 @@ public class OrderQueueTest {
     }
 
     @Test
-    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() {
+    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws noCustomerException, noPurchaseListException {
         OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("CUST00001", "ABC Construction");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        Order order = new Order(100, "KBC Construction");
+        order.addPurchase(new Purchase("PROF0005", 450));
+        order.addPurchase(new Purchase("PROF0007", 250));
         orderQueue.add(order);
         
         long expResult = new Date().getTime();
         long result = order.getTimeReceived().getTime();
         assertTrue(Math.abs(result - expResult) < 1000);
     }
+    @Test
+    public void testWhenNeitherCustomerNameNorIDExistThenThrowException() throws noPurchaseListException {
+        boolean wasException = false;
+        try {
+            OrderQueue orderQ = new OrderQueue();
+            Order order = new Order(0, "");
+          
+            orderQ.add(order);
+        } catch (noCustomerException ex) {
+            wasException = true;
+        }
+
+        assertTrue(wasException);
+
+    }
+
+    @Test
+    public void testWhenPurchaseListNotExistThenThrowException() throws noCustomerException, noPurchaseListException {
+        boolean wasException = false;
+        try {
+            OrderQueue orderQ = new OrderQueue();
+            Order order = new Order(100, "KBC Construction");
+            orderQ.add(order);
+
+        } catch (noPurchaseListException ex) {
+            wasException = true;
+        }
+
+        assertTrue(wasException);
+
+    }
+
+    @Test
+    public void testWhenOrderQueueIsEmptyThenReturnNull() {
+        OrderQueue Q = new OrderQueue();
+        Order result = Q.next();
+        assertNull(result);
+
+    }
+
+    @Test
+    public void testWhenOrderQueueIsNotEmptyThenReturn() throws noCustomerException, noPurchaseListException {
+        OrderQueue Q = new OrderQueue();
+        Order order = new Order(1, "KBC Construction");
+        order.addPurchase(new Purchase("PROD0004", 450));
+        order.addPurchase(new Purchase("PROD0006", 250));
+        Q.add(order);
+        Order result = Q.next();
+        Order expected = order;
+        assertEquals(expected, result);
+    }
+
     
 }

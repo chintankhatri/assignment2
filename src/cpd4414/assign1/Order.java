@@ -25,7 +25,7 @@ import java.util.List;
  * @author Len Payne <len.payne@lambtoncollege.ca>
  */
 public class Order {
-    private String customerId;
+    private int customerId;
     private String customerName;
     private Date timeReceived;
     private Date timeProcessed;
@@ -33,7 +33,7 @@ public class Order {
     private List<Purchase> listOfPurchases = new ArrayList<>();
     private String notes;
     
-    public Order(String customerId, String customerName) {
+    public Order(int customerId, String customerName) {
         this.customerId = customerId;
         this.customerName = customerName;
     }
@@ -42,11 +42,11 @@ public class Order {
         listOfPurchases.add(p);
     }
 
-    public String getCustomerId() {
+    public int getCustomerId() {
         return customerId;
     }
 
-    public void setCustomerId(String customerId) {
+    public void setCustomerId(int customerId) {
         this.customerId = customerId;
     }
 

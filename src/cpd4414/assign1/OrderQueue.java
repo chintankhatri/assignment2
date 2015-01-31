@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cpd4414.assign1;
 
 import java.util.ArrayDeque;
@@ -25,10 +24,27 @@ import java.util.Queue;
  * @author Len Payne <len.payne@lambtoncollege.ca>
  */
 public class OrderQueue {
+
     Queue<Order> orderQueue = new ArrayDeque<>();
-    
-    public void add(Order order) {
+
+    public void add(Order order) throws noCustomerException, noPurchaseListException {
+        if (order.getCustomerId()<1 || order.getCustomerName().isEmpty()) {
+            throw new noCustomerException();
+        }
+        if (order.getListOfPurchases().isEmpty()) {
+            throw new noPurchaseListException();
+        }
         orderQueue.add(order);
-        order.setTimeReceived(new Date());
+        order.setTimeReceived(new Date()); 
     }
+
+    public Order next() {
+       return orderQueue.peek();    
+    }
+}
+
+class noCustomerException extends Exception {
+}
+
+class noPurchaseListException extends Exception {
 }
