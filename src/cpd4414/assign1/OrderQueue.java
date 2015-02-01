@@ -27,43 +27,57 @@ public class OrderQueue {
 
     Queue<Order> orderQueue = new ArrayDeque<>();
 
-      public void add(Order order) throws noCustomerException, noPurchaseListException {
-     
-          if (order.getCustomerId() == 0 || order.getCustomerName().isEmpty() ) {
-            throw new noCustomerException();
+    public void add(Order order) throws CustomerException, PurchaseListException {
+
+        if (order.getCustomerId() == 0 || order.getCustomerName().isEmpty()) {
+            throw new CustomerException();
         }
         if (order.getListOfPurchases().isEmpty()) {
-            
-            throw new noPurchaseListException();
-       
+
+            throw new PurchaseListException();
+
         }
         orderQueue.add(order);
-        order.setTimeReceived(new Date());  
+        order.setTimeReceived(new Date());
     }
 
-    public void fulfill(Order order) throws noTimeProcessedException, noTimeRecievedException {
-        
+    public void fulfill(Order order) throws TimeProcessedException, TimeRecievedException {
+
         if (order.getTimeProcessed() == null) {
-            throw new noTimeProcessedException();
-        
+            throw new TimeProcessedException();
+
         }
         if (order.getTimeReceived() == null) {
-        
-            throw new noTimeRecievedException();
+
+            throw new TimeRecievedException();
 
         }
     }
-    
-  class noTimeProcessedException extends Exception {
+
+    public Order next() {
+        return orderQueue.peek();   
     }
 
-    class noTimeRecievedException extends Exception {
-    }
-        class noCustomerException extends Exception {
-    }
-
-    class noPurchaseListException extends Exception {
+    public void process(Order order) throws TimeRecievedException {
+        if (order.getTimeReceived() == null) {
+            throw new TimeRecievedException();
+        }
     }
 
-  
+    class TimeProcessedException extends Exception {
+
+    }
+
+    class TimeRecievedException extends Exception {
+
+    }
+
+    class CustomerException extends Exception {
+
+    }
+
+    class PurchaseListException extends Exception {
+
+    }
+
 }
