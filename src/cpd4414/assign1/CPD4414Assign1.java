@@ -33,6 +33,41 @@ public class CPD4414Assign1 {
      */
     public static void main(String[] args) throws noCustomerException, noPurchaseListException {
         // TODO code application logic here
+        
+        try {
+            try {
+                Class.forName("com.mysql.jdbc.Driver");
+            } catch (ClassNotFoundException ex) {
+                System.err.println("Driver not Found " + ex.getMessage());
+
+            }
+
+            String url = "jdbc:mysql://ipro.lambton.on.ca/inventory";
+            Connection conn = DriverManager.getConnection(url, "products", "products");
+
+            // int listOfId[] = {1, 2, 4};
+            String query = "SELECT * FROM inventory";
+            //PreparedStatement pstmt = conn.prepareStatement(query);
+
+//            for (int id : listOfId) {
+//
+//                pstmt.setInt(1, id);
+//                ResultSet rs = pstmt.executeQuery();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                System.out.println(rs.getString("name")+"\t" + rs.getInt("id") + "\t" );
+            }
+            //}
+            conn.close();
+
+        } catch (SQLException ex) {
+            System.err.println("SQL Issue: " + ex.getMessage());
+        }
+    
+
+        
 
         System.out.println(new Date().getTime());
 

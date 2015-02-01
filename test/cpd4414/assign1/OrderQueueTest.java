@@ -103,7 +103,7 @@ public class OrderQueueTest {
     }
 
     @Test
-    public void testWhenOrderQueueIsNotEmptyThenReturn() throws noCustomerException, noPurchaseListException {
+    public void testWhenOrderQueueIsNotEmptyThenReturnOrder() throws noCustomerException, noPurchaseListException {
         OrderQueue Q = new OrderQueue();
         Order order = new Order(1, "ABC Construction");
         order.addPurchase(new Purchase("PROD0004", 450));
