@@ -50,9 +50,9 @@ public class OrderQueueTest {
     }
 
     @Test
-    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws customerExcptn{
+    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws customerExcptn, prchaselist{
         OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("CUST00001", "ABC Construction");
+        Order order = new Order(20, "ABC Construction");
         order.addPurchase(new Purchase("PROD0004", 450));
         order.addPurchase(new Purchase("PROD0006", 250));
         orderQueue.add(order);
@@ -63,31 +63,34 @@ public class OrderQueueTest {
     }
     
     @Test
-    public void TestWhenNeitherCustomerIDnorCustomerNameExistsThenThrowAnException() throws customerExcptn
-    {
-        boolean e = false;
-        try{
-        OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("CUST00001", "ABC Construction");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
-        orderQueue.add(order);
+    public void testWhenNeitherCustomerNameNorIDExistThenThrowException() throws prchaselist  {
+        boolean excptn = false;
+        try {
+            OrderQueue orderQ = new OrderQueue();
+            Order order = new Order(0, "");
+            orderQ.add(order);
+        } catch (customerExcptn ex) {
+            excptn = true;
         }
-        catch(customerExcptn ex)
-                {
-                    e = true;
-                }
-        assertTrue(e);
+
+        assertTrue(excptn);
+
     }
-    
+
     @Test
-    public void TestWhenThereIsNoListOfPurchasesThenThrowAnException()
-    {
-        OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("CUST00001", "ABC Construction");
-        //order.addPurchase(new Purchase("PROD0004", 450));
-        //order.addPurchase(new Purchase("PROD0006", 250));
-        orderQueue.add(order);
+    public void testWhenPurchaseListNotExistThenThrowException() throws customerExcptn {
+        boolean excptn = false;
+        try {
+            OrderQueue orderQ = new OrderQueue();
+            Order order = new Order(25, "Smith");
+            orderQ.add(order);
+
+        } catch (prchaselist ex) {
+            excptn = true;
+        }
+
+        assertTrue(excptn);
+
     }
     
     
