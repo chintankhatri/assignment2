@@ -27,24 +27,59 @@ public class OrderQueue {
 
     Queue<Order> orderQueue = new ArrayDeque<>();
 
-    public void add(Order order) throws noCustomerException, noPurchaseListException {
-        if (order.getCustomerId()<1 || order.getCustomerName().isEmpty()) {
-            throw new noCustomerException();
+    public void add(Order order) throws CustomerException, PurchaseListException {
+      
+        if (order.getCustomerId() < 1 || order.getCustomerName().isEmpty()) {
+           
+            throw new CustomerException();
         }
         if (order.getListOfPurchases().isEmpty()) {
-            throw new noPurchaseListException();
+            
+            throw new PurchaseListException();
         }
         orderQueue.add(order);
-        order.setTimeReceived(new Date()); 
+        order.setTimeReceived(new Date());
     }
 
     public Order next() {
-       return orderQueue.peek();    
+       
+        return orderQueue.peek();
     }
-}
 
-class noCustomerException extends Exception {
-}
+    public void process(Order order) throws TimeRecievedException {
+      
+        if (order.getTimeReceived() == null) {
+           
+            throw new TimeRecievedException();
+        }
+    }
 
-class noPurchaseListException extends Exception {
+    public void fulfill(Order order) throws TimeProcessedException, TimeRecievedException {
+    
+        if (order.getTimeProcessed() == null) {
+          
+            throw new TimeProcessedException();
+        }
+    
+        if (order.getTimeReceived() == null) {
+          
+            throw new TimeRecievedException();
+
+        }
+    }
+
+    class CustomerException extends Exception {
+    }
+
+   
+    class PurchaseListException extends Exception {
+    }
+
+    class TimeRecievedException extends Exception {
+    }
+
+  
+    class TimeProcessedException extends Exception {
+    }
+
 }

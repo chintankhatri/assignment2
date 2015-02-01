@@ -16,6 +16,10 @@
 
 package cpd4414.assign1;
 
+import cpd4414.assign1.OrderQueue.CustomerException;
+import cpd4414.assign1.OrderQueue.PurchaseListException;
+import cpd4414.assign1.OrderQueue.TimeProcessedException;
+import cpd4414.assign1.OrderQueue.TimeRecievedException;
 import java.util.Date;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -50,51 +54,59 @@ public class OrderQueueTest {
     }
 
     @Test
-    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws noCustomerException, noPurchaseListException {
+    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws CustomerException, PurchaseListException {
         OrderQueue orderQueue = new OrderQueue();
+       
         Order order = new Order(100, "KBC Construction");
-        order.addPurchase(new Purchase("PROF0005", 450));
-        order.addPurchase(new Purchase("PROF0007", 250));
+        
+        order.addPurchase(new Purchase("PROF0005", 470));
+        order.addPurchase(new Purchase("PROF0007", 270));
         orderQueue.add(order);
         
         long expResult = new Date().getTime();
         long result = order.getTimeReceived().getTime();
         assertTrue(Math.abs(result - expResult) < 1000);
     }
+   
     @Test
-    public void testWhenNeitherCustomerNameNorIDExistThenThrowException() throws noPurchaseListException {
-        boolean wasException = false;
+    public void testWhenNeitherCustomerNameNorIDExistThenThrowException() throws PurchaseListException {
+        boolean Exception = false;
         try {
+          
             OrderQueue orderQ = new OrderQueue();
             Order order = new Order(0, "");
           
             orderQ.add(order);
-        } catch (noCustomerException ex) {
-            wasException = true;
+        } 
+        catch (CustomerException ex) {
+            Exception = true;
         }
 
-        assertTrue(wasException);
+        assertTrue(Exception);
 
     }
 
     @Test
-    public void testWhenPurchaseListNotExistThenThrowException() throws noCustomerException, noPurchaseListException {
-        boolean wasException = false;
+  
+    public void testWhenPurchaseListNotExistThenThrowException() throws CustomerException, PurchaseListException {
+        boolean Exception = false;
         try {
             OrderQueue orderQ = new OrderQueue();
+           
             Order order = new Order(100, "KBC Construction");
             orderQ.add(order);
 
-        } catch (noPurchaseListException ex) {
-            wasException = true;
+        }
+        catch (PurchaseListException ex) {
+            Exception = true;
         }
 
-        assertTrue(wasException);
+        assertTrue(Exception);
 
     }
 
     @Test
-    public void testWhenOrderQueueIsEmptyThenReturnNull() {
+    public void testWhenOrderQueueEmptyThenReturnNull() {
         OrderQueue Q = new OrderQueue();
         Order result = Q.next();
         assertNull(result);
@@ -102,16 +114,103 @@ public class OrderQueueTest {
     }
 
     @Test
-    public void testWhenOrderQueueIsNotEmptyThenReturn() throws noCustomerException, noPurchaseListException {
+    public void testWhenOrderQueueNotEmptyThenReturnOrder() throws CustomerException, PurchaseListException {
+       
         OrderQueue Q = new OrderQueue();
         Order order = new Order(1, "KBC Construction");
-        order.addPurchase(new Purchase("PROD0004", 450));
-        order.addPurchase(new Purchase("PROD0006", 250));
+        order.addPurchase(new Purchase("PROD0004", 470));
+        order.addPurchase(new Purchase("PROD0006", 270));
+      
         Q.add(order);
         Order result = Q.next();
         Order expected = order;
         assertEquals(expected, result);
+    
     }
+    
+    @Test
+    public void testWhenTimeReceivedNullThenThrowException() throws CustomerException,PurchaseListException {
+        boolean exceptionOccur = false;
+        
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+            Order order = new Order(1, "ABC Construction");
+         
+            order.addPurchase(new Purchase("PROD0004", 450));
+            order.addPurchase(new Purchase("PROD0006", 250));
+            order.setTimeReceived(null);
+            orderQueue.process(order);
+        } 
+        catch (TimeRecievedException ex) {
+            exceptionOccur = true;
+        }
+        assertTrue(exceptionOccur);
+    }
+
+    @Test
+    public void testWhenTimeProcessedNullThenThrowException() throws CustomerException, PurchaseListException, TimeRecievedException {
+        boolean exceptionOccur = false;
+       
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+           
+            Order order = new Order(1, "ABC Construction");
+            order.addPurchase(new Purchase("PROD0004", 450));
+            order.addPurchase(new Purchase("PROD0006", 250));
+            order.setTimeProcessed(null);
+            orderQueue.fulfill(order);
+       
+        } catch (TimeProcessedException ex) {
+            exceptionOccur = true;
+       
+        }
+        assertTrue(exceptionOccur);
+    }
+
+    @Test
+    public void testWhenTimeRecievedNullThenThrowException() throws CustomerException, PurchaseListException, TimeRecievedException, TimeProcessedException {
+      
+        boolean exceptionOccur = false;
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+            Order order = new Order(1, "ABC Construction");
+            order.addPurchase(new Purchase("PROD0004", 450));
+            order.addPurchase(new Purchase("PROD0006", 250));
+          
+            order.setTimeProcessed(new Date());
+            order.setTimeReceived(null);
+            orderQueue.fulfill(order);
+        
+        } 
+        catch (TimeRecievedException ex) {
+         
+            exceptionOccur = true;
+        }
+        assertTrue(exceptionOccur);
+    }
+    
+    @Test
+    public void testwhentheorderhasatimereceivedandallofthepurchasesrinstockitheinventorytable(){
+    
+    
+    }
+    
+    
+    @Test
+    public void testwhentheorderhastimerocessedtimereceivedallofthepurchasesareinstockintheinventorytable(){
+    
+    
+    }
+    
+
+    @Test
+    public void testwhenthereordersinthesystereturnJSONobjectofthefollowingroughschema(){
+    
+    
+    }
+
+    
+    
 
     
 }
