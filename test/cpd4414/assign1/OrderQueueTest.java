@@ -23,7 +23,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import cpd4414.assign1.customerExcptn;
 /**
  *
  * @author Len Payne <len.payne@lambtoncollege.ca>
@@ -50,7 +49,7 @@ public class OrderQueueTest {
     }
 
     @Test
-    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws customerExcptn, prchaselist{
+    public void wheneithercustomerIDorcustomernameexistandthereisalistofpurchasesthensetthetimereceivedtonow() throws customerExcptn, prchaselist{
         OrderQueue orderQueue = new OrderQueue();
         Order order = new Order(20, "ABC Construction");
         order.addPurchase(new Purchase("PROD0004", 450));
@@ -63,7 +62,7 @@ public class OrderQueueTest {
     }
     
     @Test
-    public void testWhenNeitherCustomerNameNorIDExistThenThrowException() throws prchaselist  {
+    public void WhenNeitherCustomerNameNorIDExistThenThrowException() throws prchaselist  {
         boolean excptn = false;
         try {
             OrderQueue orderQ = new OrderQueue();
@@ -78,7 +77,7 @@ public class OrderQueueTest {
     }
 
     @Test
-    public void testWhenPurchaseListNotExistThenThrowException() throws customerExcptn {
+    public void WhenPurchaseListNotExistThenThrowException() throws customerExcptn {
         boolean excptn = false;
         try {
             OrderQueue orderQ = new OrderQueue();
@@ -94,8 +93,81 @@ public class OrderQueueTest {
     }
     
     
+    @Test
+    public void WhenOrderQueueIsEmptyThenReturnNull() {
+        OrderQueue Q = new OrderQueue();
+        Order result = Q.next();
+        assertNull(result);
+
+    }
+
+    @Test
+    public void WhenOrderQueueIsNotEmptyThenReturn() throws customerExcptn, prchaselist {
+        OrderQueue Q = new OrderQueue();
+        Order order = new Order(1, "ABC Construction");
+        order.addPurchase(new Purchase("PROD0004", 450));
+        order.addPurchase(new Purchase("PROD0006", 250));
+        Q.add(order);
+        Order result = Q.next();
+        Order expected = order;
+        assertEquals(expected, result);
+    }
+
     
-    
-    
+    @Test
+    public void WhenTimeReceivedIsNullThenThrowException() throws customerExcptn, prchaselist {
+        boolean exceptionOccur = false;
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+            Order order = new Order(1, "ABC Construction");
+            order.addPurchase(new Purchase("PROD0004", 450));
+            order.addPurchase(new Purchase("PROD0006", 250));
+            order.setTimeReceived(null);
+            orderQueue.process(order);
+        } catch (Notymexcptn ex) {
+            exceptionOccur = true;
+        }
+        assertTrue(exceptionOccur);
+    }
+
+    @Test
+    public void WhenTimeProcessedIsNullThenThrowException() throws customerExcptn, prchaselist, Notymexcptn {
+        boolean exceptionOccur = false;
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+            Order order = new Order(1, "ABC Construction");
+            order.addPurchase(new Purchase("PROD0004", 450));
+            order.addPurchase(new Purchase("PROD0006", 250));
+            order.setTimeProcessed(null);
+            orderQueue.fulfill(order);
+        } catch (NoTymprcssdexcptn ex) {
+            exceptionOccur = true;
+        }
+        assertTrue(exceptionOccur);
+    }
+
+    @Test
+    public void WhenTimeRecievedIsNullThenThrowException() throws customerExcptn, prchaselist, Notymexcptn, NoTymprcssdexcptn {
+        boolean exceptionOccur = false;
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+            Order order = new Order(1, "ABC Construction");
+            order.addPurchase(new Purchase("PROD0004", 450));
+            order.addPurchase(new Purchase("PROD0006", 250));
+            order.setTimeProcessed(new Date());
+            order.setTimeReceived(null);
+            orderQueue.fulfill(order);
+        } catch (Notymexcptn ex) {
+            exceptionOccur = true;
+        }
+        assertTrue(exceptionOccur);
+    }
     
 }
+
+
+    
+    
+    
+    
+

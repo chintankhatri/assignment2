@@ -28,7 +28,7 @@ public class OrderQueue {
     Queue<Order> orderQueue = new ArrayDeque<>();
 
     public void add(Order order) throws customerExcptn, prchaselist {
-        if (order.getCustomerId() == 0 || order.getCustomerName().isEmpty() ) {
+        if (order.getCustomerId() == 0 || order.getCustomerName().isEmpty()) {
             throw new customerExcptn();
         }
         if (order.getListOfPurchases().isEmpty()) {
@@ -38,10 +38,35 @@ public class OrderQueue {
         order.setTimeReceived(new Date());
     }
 
+    public Order next() {
+        return orderQueue.peek();    
+    }
+
+    public void process(Order order) throws Notymexcptn {
+        if (order.getTimeReceived() == null) {
+            throw new Notymexcptn();
+        }
+    }
+
+    public void fulfill(Order order) throws NoTymprcssdexcptn, Notymexcptn {
+        if (order.getTimeProcessed() == null) {
+            throw new NoTymprcssdexcptn();
+        }
+        if (order.getTimeReceived() == null) {
+            throw new Notymexcptn();
+
+        }
+    }
 }
 
 class customerExcptn extends Exception {
 }
 
 class prchaselist extends Exception {
+}
+
+class Notymexcptn extends Exception {
+}
+
+class NoTymprcssdexcptn extends Exception {
 }
