@@ -13,8 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package cpd4414.assign1;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Date;
 
 /**
  *
@@ -25,8 +31,29 @@ public class CPD4414Assign1 {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws noCustomerException, noPurchaseListException {
         // TODO code application logic here
+
+        System.out.println(new Date().getTime());
+
+        Order o1 = new Order(1, "vicky");
+        Purchase p1 = new Purchase("lobortis augue scelerisque", 97);
+        o1.addPurchase(p1);
+        OrderQueue q = new OrderQueue();
+        q.add(o1);
+        System.out.println(o1.getTimeReceived());
+
+        Order o2 = new Order(2, "Jacky");
+        Purchase p2 = new Purchase("libero. Integer in", 94);
+        o2.addPurchase(p2);
+
+        q.add(o2);
+        o2.setTimeReceived(null);
+        System.out.println(o2.getTimeReceived());
+        System.out.println(o2.getTimeProcessed());
+        System.out.println(q.next().getCustomerName());
+        System.out.println(o2.getTimeReceived());
+
     }
-    
+
 }

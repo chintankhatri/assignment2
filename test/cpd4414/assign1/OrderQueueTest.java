@@ -51,9 +51,9 @@ public class OrderQueueTest {
     }
 
     @Test
-    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws noCustomerException, noPurchaseListException  {
+    public void testWhenCustomerExistsAndPurchasesExistThenTimeReceivedIsNow() throws noCustomerException, noPurchaseListException {
         OrderQueue orderQueue = new OrderQueue();
-        Order order = new Order("CUST00001", "ABC Construction");
+        Order order = new Order(1, "ABC Construction");
         order.addPurchase(new Purchase("PROD0004", 450));
         order.addPurchase(new Purchase("PROD0006", 250));
         orderQueue.add(order);
@@ -68,9 +68,7 @@ public class OrderQueueTest {
         boolean wasException = false;
         try {
             OrderQueue orderQ = new OrderQueue();
-            Order order = new Order("", "");
-            order.addPurchase(new Purchase("PROD0004", 450));
-            order.addPurchase(new Purchase("PROD0006", 250));
+            Order order = new Order(0, "");
             orderQ.add(order);
         } catch (noCustomerException ex) {
             wasException = true;
@@ -85,9 +83,9 @@ public class OrderQueueTest {
         boolean wasException = false;
         try {
             OrderQueue orderQ = new OrderQueue();
-            Order order = new Order("CUST00001", "ABC Construction");
+            Order order = new Order(1, "ABC Construction");
             orderQ.add(order);
-            
+
         } catch (noPurchaseListException ex) {
             wasException = true;
         }
@@ -95,4 +93,84 @@ public class OrderQueueTest {
         assertTrue(wasException);
 
     }
+
+    @Test
+    public void testWhenOrderQueueIsEmptyThenReturnNull() {
+        OrderQueue Q = new OrderQueue();
+        Order result = Q.next();
+        assertNull(result);
+
+    }
+
+    @Test
+    public void testWhenOrderQueueIsNotEmptyThenReturn() throws noCustomerException, noPurchaseListException {
+        OrderQueue Q = new OrderQueue();
+        Order order = new Order(1, "ABC Construction");
+        order.addPurchase(new Purchase("PROD0004", 450));
+        order.addPurchase(new Purchase("PROD0006", 250));
+        Q.add(order);
+        Order result = Q.next();
+        Order expected = order;
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testWhenOrderHasTimeReceivedAndAllPurcheseInStockThenProcessTimeIsNow() {
+        OrderQueue orderQueue = new OrderQueue();
+        Order order = new Order(1, "ABC Construction");
+        order.addPurchase(new Purchase("PROD0004", 45));
+        order.addPurchase(new Purchase("PROD0006", 25));
+        //order.setTimeReceived();
+        //orderQueue.add(order);
+    }
+
+    @Test
+    public void testWhenTimeReceivedIsNullThenThrowException() throws noCustomerException, noPurchaseListException {
+        boolean exceptionOccur = false;
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+            Order order = new Order(1, "ABC Construction");
+            Purchase purchase  = new Purchase("lobortis augue scelerisque", 97);           
+            order.setTimeReceived(null);
+            orderQueue.process(order,purchase);
+        } catch (noTimeRecievedException ex) {
+            exceptionOccur = true;
+        }
+        assertTrue(exceptionOccur);
+    }
+
+    @Test
+    public void testWhenTimeProcessedIsNullThenThrowException() throws noCustomerException, noPurchaseListException, noTimeRecievedException {
+        boolean exceptionOccur = false;
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+            Order order = new Order(1, "ABC Construction");
+            order.addPurchase(new Purchase("PROD0004", 450));
+            order.addPurchase(new Purchase("PROD0006", 250));
+            order.setTimeProcessed(null);
+            orderQueue.fulfill(order);
+        } catch (noTimeProcessedException ex) {
+            exceptionOccur = true;
+        }
+        assertTrue(exceptionOccur);
+    }
+
+    @Test
+    public void testWhenTimeRecievedIsNullThenThrowException() throws noCustomerException, noPurchaseListException, noTimeRecievedException, noTimeProcessedException {
+        boolean exceptionOccur = false;
+        try {
+            OrderQueue orderQueue = new OrderQueue();
+            Order order = new Order(1, "ABC Construction");
+            order.addPurchase(new Purchase("PROD0004", 450));
+            order.addPurchase(new Purchase("PROD0006", 250));
+            order.setTimeProcessed(new Date());
+            order.setTimeReceived(null);
+            orderQueue.fulfill(order);
+        } catch (noTimeRecievedException ex) {
+            exceptionOccur = true;
+        }
+        assertTrue(exceptionOccur);
+    }
+    
 }
+
